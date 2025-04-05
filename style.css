@@ -1,0 +1,54 @@
+* {
+  margin: 0px;
+  padding: 0px;
+  font-family: sans-serif, inter;
+  box-sizing: border-box;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 2h;
+  align-items: center;
+}
+
+.container .topContainer {
+  width: 90vw;
+  background-color: black;
+  display: flex;
+  flex-direction: column;
+  padding: 2vh;
+}
+
+.topContainer h1 {
+  color: white;
+}
+
+.topContainer h3 {
+  margin-top: 2vh;
+  color: white;
+}
+
+.topContainer p {
+  margin-top: 2vh;
+  color: white;
+}
+
+.middleContainer {
+  width: 90vw;
+  margin-top: 3vh;
+}
+
+.middleContainer .formCont {
+  display: flex;
+  gap: 1vw;
+  margin-top: 2vh;
+  margin-bottom: 2vh;
+}
+
+.lowerContainer {
+  width: 90vw;
+  display: flex;
+  flex-direction: column;
+  gap: 2vh;
+}
