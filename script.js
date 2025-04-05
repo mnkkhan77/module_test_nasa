@@ -1,6 +1,11 @@
 const apiKey = import.meta.env.VITE_API_KEY;
 
+// Initialize search history with object format
 let searchHistory = JSON.parse(localStorage.getItem("searchHistory")) || [];
+// Migrate old string format to object format
+searchHistory = searchHistory.map((item) =>
+  typeof item === "string" ? { date: item } : item
+);
 
 async function getCurrentImageOfTheDay(enteredDate) {
   try {
@@ -16,7 +21,6 @@ async function getCurrentImageOfTheDay(enteredDate) {
 
     const data = await response.json();
 
-    // cause sometimes in the response there is youtube video url instead of am image
     if (data.url.includes("youtube.com") || data.url.includes("youtu.be")) {
       const videoId = getYouTubeVideoId(data.url);
       if (videoId) {
@@ -47,8 +51,10 @@ function getImageOfTheDay() {
 
   getCurrentImageOfTheDay(date);
 
-  if (!searchHistory.includes(date)) {
-    searchHistory.push(date);
+  // Check if date exists as object
+  const exists = searchHistory.some((item) => item.date === date);
+  if (!exists) {
+    searchHistory.push({ date }); // Store as object
     localStorage.setItem("searchHistory", JSON.stringify(searchHistory));
     updateSearchHistory();
   }
@@ -58,21 +64,30 @@ function updateSearchHistory() {
   const historyList = document.getElementById("search-history");
   historyList.innerHTML = "";
 
-  searchHistory.forEach((date) => {
-    const listItem = document.createElement("li");
-    listItem.textContent = date;
+  // Show newest first
+  searchHistory
+    .slice()
+    .reverse()
+    .forEach((item) => {
+      const listItem = document.createElement("li");
+      listItem.textContent = item.date;
+      listItem.style.cursor = "pointer";
+      listItem.title = "Click to view this date";
 
-    listItem.addEventListener("click", () => {
-      getCurrentImageOfTheDay(date);
+      listItem.addEventListener("click", () => {
+        // Update date picker and reload
+        document.getElementById("search-input").value = item.date;
+        getCurrentImageOfTheDay(item.date);
+      });
+
+      historyList.appendChild(listItem);
     });
-
-    historyList.appendChild(listItem);
-  });
 }
 
 document
   .getElementById("searchButton")
   .addEventListener("click", getImageOfTheDay);
 
+// Initial setup
 getCurrentImageOfTheDay();
 updateSearchHistory();
