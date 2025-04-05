@@ -52,3 +52,10 @@
   flex-direction: column;
   gap: 2vh;
 }
+
+#search-history li {
+  cursor: pointer;
+  color: #0000ff;
+  transition: text-decoration 0.2s;
+  text-decoration: underline;
+}
